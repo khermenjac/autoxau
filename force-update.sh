@@ -1,3 +1,28 @@
+#!/bin/bash
+
+# Force Update AutoXAU Page
+echo "🔄 Forcing AutoXAU Page Update"
+echo "=============================="
+
+cd /var/www/autoxau
+
+# Step 1: Check what's currently running
+echo "📊 Current PM2 Status:"
+pm2 list
+
+# Step 2: Kill all Node processes to ensure clean start
+echo -e "\n🛑 Stopping all processes..."
+pm2 kill
+pkill -f node
+sleep 2
+
+# Step 3: Check which file PM2 was running
+echo -e "\n📁 Files in directory:"
+ls -la *.js
+
+# Step 4: Create the modern design file if it doesn't exist
+echo -e "\n📝 Creating/Updating modern design file..."
+cat > app.js << 'EOF'
 const http = require('http');
 const url = require('url');
 const PORT = 3000;
@@ -351,3 +376,44 @@ server.listen(PORT, '0.0.0.0', () => {
 server.on('error', (err) => {
     console.error('Server error:', err);
 });
+EOF
+
+# Step 5: Start fresh with PM2
+echo -e "\n🚀 Starting fresh PM2 process..."
+pm2 start app.js --name autoxau --update-env
+pm2 save
+
+# Step 6: Clear browser cache instructions
+echo -e "\n🌐 Clear Browser Cache:"
+echo "1. Press Ctrl+F5 (Windows) or Cmd+Shift+R (Mac)"
+echo "2. Or open in Incognito/Private mode"
+echo "3. Or add ?v=2 to URL: http://autoxau.com?v=2"
+
+# Step 7: Test the update
+echo -e "\n🧪 Testing update..."
+sleep 3
+curl -s http://localhost:3000 | grep -o "Intelligent Gold Trading" && echo "✅ New design is active!" || echo "⚠️ Old design still showing"
+
+# Step 8: Clear Nginx cache if exists
+echo -e "\n🔧 Clearing any server cache..."
+sudo nginx -s reload
+
+# Step 9: Alternative - Direct Node run
+echo -e "\n📝 If PM2 still shows old version, try direct Node:"
+echo "pm2 stop autoxau"
+echo "node app.js"
+
+echo -e "\n✅ Force Update Complete!"
+echo "================================"
+echo ""
+echo "🔄 To see the new design:"
+echo "1. Hard refresh: Ctrl+F5 or Cmd+Shift+R"
+echo "2. Open in private/incognito window"
+echo "3. Visit: http://autoxau.com?v=new"
+echo ""
+echo "🔍 Check which file is running:"
+echo "pm2 show autoxau"
+echo ""
+echo "📝 If still not working, run manually:"
+echo "pm2 stop autoxau"
+echo "node app.js"
