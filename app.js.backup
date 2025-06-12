@@ -1,19 +1,21 @@
 const http = require('http');
+const url = require('url');
 const PORT = 3000;
 
-console.log('Starting AutoXAU server...');
+console.log('Starting AutoXAU Modern Design Server...');
 
-const server = http.createServer((req, res) => {
-    console.log(`Request received: ${req.url}`);
-    
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(`
+const getHTML = () => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoXAU - Professional XAUUSD Trading Bot</title>
+    <title>AutoXAU - Advanced AI-Powered Gold Trading System</title>
+    <meta name="description" content="Experience the future of gold trading with AutoXAU's advanced AI algorithms.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -21,161 +23,331 @@ const server = http.createServer((req, res) => {
             box-sizing: border-box;
         }
         
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --text: #374151;
+            --text-light: #6B7280;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000;
-            color: white;
-            overflow-x: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.6;
         }
         
-        .container {
-            min-height: 100vh;
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            background: radial-gradient(ellipse at center, #1a1a1a 0%, #000 100%);
-            padding: 20px;
         }
         
-        .content {
-            text-align: center;
-            max-width: 800px;
-            animation: fadeIn 1s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        h1 {
-            font-size: 5rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #FFD700, #FFA500);
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
         
-        .tagline {
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #EBF5FF 0%, #F3E8FF 100%);
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero .subtitle {
             font-size: 1.5rem;
-            color: #888;
-            margin-bottom: 50px;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            line-height: 1.8;
         }
         
-        .stats {
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
         }
         
         .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 15px;
-            padding: 30px 20px;
-            transition: all 0.3s ease;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s;
         }
         
         .stat-card:hover {
-            background: rgba(255, 255, 255, 0.08);
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
         
         .stat-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #FFD700;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
         }
         
         .stat-label {
-            font-size: 0.9rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: var(--text-light);
+            font-weight: 500;
         }
         
-        .cta-section {
-            margin-top: 50px;
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         
-        .cta-button {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(90deg, #FFD700, #FFA500);
-            color: #000;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
+        .btn {
+            padding: 1rem 2.5rem;
             border-radius: 50px;
-            transition: all 0.3s ease;
-            margin: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
         }
         
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
         
-        .cta-button.secondary {
-            background: transparent;
-            border: 2px solid #FFD700;
-            color: #FFD700;
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
         }
         
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: white;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            padding: 2rem;
+            background: var(--light);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            h1 { font-size: 3rem; }
-            .tagline { font-size: 1.2rem; }
-            .stats { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <h1>AutoXAU</h1>
-            <p class="tagline">Professional Automated Trading System for XAUUSD</p>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">AutoXAU</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Intelligent Gold Trading Powered by Advanced AI</h1>
+            <p class="subtitle">
+                Transform your trading experience with AutoXAU's sophisticated algorithmic system. 
+                Our cutting-edge technology analyzes market patterns 24/7 for optimal trading performance.
+            </p>
             
-            <div class="stats">
+            <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value">79.3%</div>
-                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-icon">🤖</div>
+                    <div class="stat-value">AI-Driven</div>
+                    <div class="stat-label">Smart Technology</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">$793</div>
-                    <div class="stat-label">Weekly Profit</div>
-                </div>
-                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
                     <div class="stat-value">24/7</div>
-                    <div class="stat-label">Auto Trading</div>
+                    <div class="stat-label">Always Active</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">0.1s</div>
-                    <div class="stat-label">Execution</div>
+                    <div class="stat-icon">🛡️</div>
+                    <div class="stat-value">Secure</div>
+                    <div class="stat-label">Protected Trading</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">Advanced</div>
+                    <div class="stat-label">Analytics Engine</div>
                 </div>
             </div>
             
-            <div class="cta-section">
-                <a href="#" class="cta-button">Start Trading Now</a>
-                <a href="#pricing" class="cta-button secondary">View Plans</a>
+            <div class="cta-buttons">
+                <a href="#start" class="btn btn-primary">Start Trading Today</a>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2>Why Choose AutoXAU?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🧠 Intelligent Market Analysis</h3>
+                <p>
+                    Our AI engine processes millions of data points, identifying profitable patterns 
+                    and market inefficiencies that human traders might miss.
+                </p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Lightning-Fast Execution</h3>
+                <p>
+                    With sub-millisecond response times, AutoXAU ensures you never miss a trading 
+                    opportunity in the fast-moving gold market.
+                </p>
+            </div>
+            <div class="feature-card">
+                <h3>🛡️ Advanced Risk Management</h3>
+                <p>
+                    Protect your capital with sophisticated risk control systems including dynamic 
+                    position sizing and intelligent stop-loss algorithms.
+                </p>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
-    `);
+`;
+
+const server = http.createServer((req, res) => {
+    console.log('Request received:', req.url);
+    res.writeHead(200, { 
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    });
+    res.end(getHTML());
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-    console.log('✅ AutoXAU server is running!');
-    console.log('📍 Local: http://localhost:' + PORT);
-    console.log('📍 Network: http://0.0.0.0:' + PORT);
+    console.log('✅ AutoXAU Modern Design Server Running on port ' + PORT);
+    console.log('🎨 Light blue theme active');
+    console.log('📍 Visit: http://localhost:' + PORT);
 });
 
 server.on('error', (err) => {
-    console.error('❌ Server error:', err);
+    console.error('Server error:', err);
 });

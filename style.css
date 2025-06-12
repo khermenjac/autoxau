@@ -1,0 +1,269 @@
+
+/* Rankings Section */
+.rankings-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.ranking-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.google-logo {
+    margin-right: 30px;
+}
+
+.ranking-content h2 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    color: #FFD700;
+}
+
+.ranking-content h3 {
+    font-size: 1.5rem;
+    margin: 0 0 15px 0;
+}
+
+.ranking-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Reviews Section */
+.reviews-section {
+    padding: 80px 0;
+    background: #f8f9fa;
+    overflow: hidden;
+}
+
+.reviews-slider {
+    position: relative;
+    overflow: hidden;
+    margin: 40px 0;
+}
+
+.review-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: calc(100% * 7); /* Adjust based on total reviews */
+}
+
+.review-card {
+    flex: 0 0 calc(100% / 3 - 20px);
+    margin: 0 10px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    min-height: 200px;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.reviewer-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.reviewer-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+}
+
+.rating {
+    color: #FFD700;
+    font-size: 1.2rem;
+}
+
+.profit-badge {
+    margin-left: auto;
+    background: #28a745;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.review-text {
+    font-style: italic;
+    line-height: 1.6;
+    color: #666;
+}
+
+.slider-controls {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.slider-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 0 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.slider-btn:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+}
+
+/* FAQ Section */
+.faq-section {
+    padding: 80px 0;
+    background: white;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+    color: #007bff;
+}
+
+.faq-question h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.faq-toggle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    transition: transform 0.3s ease;
+}
+
+.faq-answer {
+    display: none;
+    padding: 0 0 20px 0;
+    color: #666;
+    line-height: 1.6;
+}
+
+.faq-answer p {
+    margin: 0;
+}
+
+/* Chart Section */
+.chart-section {
+    padding: 80px 0;
+    background: #1a1a1a;
+    color: white;
+}
+
+.chart-container {
+    height: 500px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 30px;
+}
+
+#tradingview-chart {
+    height: 100%;
+    width: 100%;
+}
+
+/* Header scroll effect */
+.header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+}
+
+/* Responsive design for new sections */
+@media (max-width: 768px) {
+    .ranking-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    
+    .google-logo {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .ranking-content h2 {
+        font-size: 2rem;
+    }
+    
+    .review-card {
+        flex: 0 0 calc(100% - 20px);
+    }
+    
+    .review-track {
+        width: calc(100% * 20); /* Adjust for mobile */
+    }
+    
+    .chart-container {
+        height: 400px;
+    }
+}
+
+/* Animation effects */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-card,
+.faq-item,
+.ranking-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Loading animation for chart */
+.chart-container::before {
+    content: "Loading chart...";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #888;
+    font-size: 1.2rem;
+}

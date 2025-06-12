@@ -1,353 +1,337 @@
-const http = require('http');
-const url = require('url');
-const PORT = 3000;
+// AutoXau Pro - Enhanced JavaScript
 
-console.log('Starting AutoXAU Modern Design Server...');
+// Reviews data
+const reviewsData = [
+    {
+        name: "John Smith",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "AutoXau Pro has transformed my trading. Consistent profits with minimal effort!",
+        profit: "+$15,420"
+    },
+    {
+        name: "Maria Garcia",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c2e6?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "Best trading bot I've ever used. The AI predictions are incredibly accurate.",
+        profit: "+$22,180"
+    },
+    {
+        name: "David Chen",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "6 months using AutoXau Pro, 89% win rate. Absolutely amazing results!",
+        profit: "+$31,750"
+    },
+    {
+        name: "Sarah Johnson",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "Finally, a bot that actually works! My account has grown 300% this year.",
+        profit: "+$18,960"
+    },
+    {
+        name: "Michael Brown",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "The risk management features saved me from major losses. Highly recommended!",
+        profit: "+$12,340"
+    },
+    {
+        name: "Emily Davis",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "AutoXau Pro's customer support is excellent. They helped me optimize my settings.",
+        profit: "+$25,670"
+    },
+    {
+        name: "Robert Wilson",
+        avatar: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "I've tried many bots, but AutoXau Pro is in a league of its own. Impressive!",
+        profit: "+$19,850"
+    },
+    {
+        name: "Lisa Anderson",
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "The backtesting results were promising, but live trading exceeded expectations!",
+        profit: "+$28,920"
+    },
+    {
+        name: "James Taylor",
+        avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "Set it and forget it! AutoXau Pro handles everything while I focus on other things.",
+        profit: "+$16,540"
+    },
+    {
+        name: "Jessica Martinez",
+        avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "The real-time notifications keep me informed of every profitable trade. Love it!",
+        profit: "+$21,380"
+    },
+    {
+        name: "William Thomas",
+        avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "AutoXau Pro's AI is incredibly smart. It adapts to market conditions perfectly.",
+        profit: "+$33,210"
+    },
+    {
+        name: "Ashley White",
+        avatar: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "As a beginner, AutoXau Pro made trading accessible and profitable for me.",
+        profit: "+$14,760"
+    },
+    {
+        name: "Christopher Lee",
+        avatar: "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "The transparency and detailed reporting make me trust this bot completely.",
+        profit: "+$27,540"
+    },
+    {
+        name: "Amanda Rodriguez",
+        avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "AutoXau Pro consistently outperforms my manual trading. Highly efficient!",
+        profit: "+$20,190"
+    },
+    {
+        name: "Daniel Harris",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "The bot's performance during volatile markets is exceptional. Very impressed!",
+        profit: "+$29,680"
+    },
+    {
+        name: "Jennifer Clark",
+        avatar: "https://images.unsplash.com/photo-1502767089025-6572583495b9?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "AutoXau Pro has given me financial freedom. I can finally quit my day job!",
+        profit: "+$35,420"
+    },
+    {
+        name: "Matthew Lewis",
+        avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "The 24/7 trading capability means I never miss profitable opportunities.",
+        profit: "+$17,830"
+    },
+    {
+        name: "Nicole Walker",
+        avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "AutoXau Pro's risk management saved my account during market crashes.",
+        profit: "+$23,150"
+    },
+    {
+        name: "Kevin Hall",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "The user interface is intuitive and the results speak for themselves.",
+        profit: "+$26,970"
+    },
+    {
+        name: "Rachel Young",
+        avatar: "https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=100&h=100&fit=crop&crop=face",
+        rating: 5,
+        text: "I've recommended AutoXau Pro to all my trading friends. It's that good!",
+        profit: "+$32,540"
+    }
+];
 
-const getHTML = () => `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoXAU - Advanced AI-Powered Gold Trading System</title>
-    <meta name="description" content="Experience the future of gold trading with AutoXAU's advanced AI algorithms.">
+// FAQ data
+const faqData = [
+    {
+        question: "What is AutoXau Pro?",
+        answer: "AutoXau Pro is an advanced automated trading bot specifically designed for XAUUSD (Gold) trading. It uses AI and machine learning algorithms to analyze market conditions and execute profitable trades 24/7."
+    },
+    {
+        question: "How much can I expect to earn?",
+        answer: "While past performance doesn't guarantee future results, our users typically see returns of 15-35% monthly. Results vary based on market conditions and account size."
+    },
+    {
+        question: "Is AutoXau Pro safe to use?",
+        answer: "Yes, AutoXau Pro includes comprehensive risk management features including stop-loss mechanisms, position sizing, and drawdown protection to safeguard your capital."
+    },
+    {
+        question: "What is the minimum deposit required?",
+        answer: "We recommend a minimum deposit of $500 to start trading with AutoXau Pro, though the bot can work with accounts as small as $100."
+    },
+    {
+        question: "Do I need trading experience?",
+        answer: "No trading experience is required. AutoXau Pro is designed to be user-friendly for beginners while offering advanced features for experienced traders."
+    },
+    {
+        question: "Which brokers are compatible?",
+        answer: "AutoXau Pro works with most MetaTrader 4 and MetaTrader 5 brokers. We provide a list of recommended brokers for optimal performance."
+    },
+    {
+        question: "How often does the bot trade?",
+        answer: "The bot monitors markets 24/5 and trades based on market opportunities. On average, it executes 5-15 trades per week, depending on market conditions."
+    },
+    {
+        question: "Can I customize the trading settings?",
+        answer: "Yes, AutoXau Pro offers customizable risk levels, lot sizes, and trading parameters to match your trading preferences and risk tolerance."
+    },
+    {
+        question: "Is there a money-back guarantee?",
+        answer: "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with the performance, we'll refund your purchase."
+    },
+    {
+        question: "How do I get support?",
+        answer: "We provide 24/7 customer support via live chat, email, and phone. Our team of trading experts is always ready to help you optimize your bot's performance."
+    }
+];
+
+// Reviews slider functionality
+let currentSlide = 0;
+const slidesToShow = 3;
+
+function loadReviews() {
+    const track = document.getElementById('reviewTrack');
+    if (!track) return;
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    track.innerHTML = reviewsData.map(review => `
+        <div class="review-card">
+            <div class="review-header">
+                <img src="${review.avatar}" alt="${review.name}" class="reviewer-avatar">
+                <div class="reviewer-info">
+                    <h4>${review.name}</h4>
+                    <div class="rating">
+                        ${'★'.repeat(review.rating)}
+                    </div>
+                </div>
+                <div class="profit-badge">${review.profit}</div>
+            </div>
+            <p class="review-text">${review.text}</p>
+        </div>
+    `).join('');
+}
+
+function moveSlider(direction) {
+    const maxSlides = Math.ceil(reviewsData.length / slidesToShow);
+    currentSlide += direction;
     
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary: #3B82F6;
-            --primary-dark: #2563EB;
-            --secondary: #10B981;
-            --accent: #F59E0B;
-            --dark: #1F2937;
-            --light: #F9FAFB;
-            --text: #374151;
-            --text-light: #6B7280;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--light);
-            color: var(--text);
-            line-height: 1.6;
-        }
-        
-        /* Navigation */
-        nav {
-            background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 1.75rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-        
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
-        /* Hero Section */
-        .hero {
-            margin-top: 80px;
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, #EBF5FF 0%, #F3E8FF 100%);
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-        }
-        
-        .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .hero .subtitle {
-            font-size: 1.5rem;
-            color: var(--text-light);
-            margin-bottom: 3rem;
-            line-height: 1.8;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            max-width: 800px;
-            margin: 0 auto 3rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-        }
-        
-        .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            color: var(--text-light);
-            font-weight: 500;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 5rem 2rem;
-            background: white;
-        }
-        
-        .features h2 {
-            text-align: center;
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            padding: 2rem;
-            background: var(--light);
-            border-radius: 15px;
-            transition: all 0.3s;
-        }
-        
-        .feature-card:hover {
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-        
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-        
-        .feature-card p {
-            color: var(--text-light);
-            line-height: 1.8;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">AutoXAU</div>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#technology">Technology</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    if (currentSlide < 0) currentSlide = maxSlides - 1;
+    if (currentSlide >= maxSlides) currentSlide = 0;
+    
+    const track = document.getElementById('reviewTrack');
+    if (track) {
+        const translateX = -currentSlide * (100 / maxSlides);
+        track.style.transform = `translateX(${translateX}%)`;
+    }
+}
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Intelligent Gold Trading Powered by Advanced AI</h1>
-            <p class="subtitle">
-                Transform your trading experience with AutoXAU's sophisticated algorithmic system. 
-                Our cutting-edge technology analyzes market patterns 24/7 for optimal trading performance.
-            </p>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">🤖</div>
-                    <div class="stat-value">AI-Driven</div>
-                    <div class="stat-label">Smart Technology</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-value">24/7</div>
-                    <div class="stat-label">Always Active</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🛡️</div>
-                    <div class="stat-value">Secure</div>
-                    <div class="stat-label">Protected Trading</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-value">Advanced</div>
-                    <div class="stat-label">Analytics Engine</div>
-                </div>
+// FAQ functionality
+function loadFAQ() {
+    const container = document.getElementById('faqContainer');
+    if (!container) return;
+    
+    container.innerHTML = faqData.map((faq, index) => `
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(${index})">
+                <h3>${faq.question}</h3>
+                <span class="faq-toggle">+</span>
             </div>
-            
-            <div class="cta-buttons">
-                <a href="#start" class="btn btn-primary">Start Trading Today</a>
+            <div class="faq-answer" id="faq-${index}">
+                <p>${faq.answer}</p>
             </div>
         </div>
-    </section>
+    `).join('');
+}
 
-    <!-- Features Section -->
-    <section class="features">
-        <h2>Why Choose AutoXAU?</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <h3>🧠 Intelligent Market Analysis</h3>
-                <p>
-                    Our AI engine processes millions of data points, identifying profitable patterns 
-                    and market inefficiencies that human traders might miss.
-                </p>
-            </div>
-            <div class="feature-card">
-                <h3>⚡ Lightning-Fast Execution</h3>
-                <p>
-                    With sub-millisecond response times, AutoXAU ensures you never miss a trading 
-                    opportunity in the fast-moving gold market.
-                </p>
-            </div>
-            <div class="feature-card">
-                <h3>🛡️ Advanced Risk Management</h3>
-                <p>
-                    Protect your capital with sophisticated risk control systems including dynamic 
-                    position sizing and intelligent stop-loss algorithms.
-                </p>
-            </div>
-        </div>
-    </section>
-</body>
-</html>
-`;
+function toggleFAQ(index) {
+    const answer = document.getElementById(`faq-${index}`);
+    const toggle = answer.previousElementSibling.querySelector('.faq-toggle');
+    
+    if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        toggle.textContent = '+';
+    } else {
+        // Close all other FAQs
+        document.querySelectorAll('.faq-answer').forEach(item => {
+            item.style.display = 'none';
+        });
+        document.querySelectorAll('.faq-toggle').forEach(item => {
+            item.textContent = '+';
+        });
+        
+        // Open clicked FAQ
+        answer.style.display = 'block';
+        toggle.textContent = '-';
+    }
+}
 
-const server = http.createServer((req, res) => {
-    console.log('Request received:', req.url);
-    res.writeHead(200, { 
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+// TradingView Chart
+function loadTradingViewChart() {
+    const chartContainer = document.getElementById('tradingview-chart');
+    if (!chartContainer) return;
+    
+    // Create TradingView widget
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+    script.innerHTML = JSON.stringify({
+        "autosize": true,
+        "symbol": "OANDA:XAUUSD",
+        "interval": "15",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1",
+        "locale": "en",
+        "toolbar_bg": "#f1f3f6",
+        "enable_publishing": false,
+        "allow_symbol_change": true,
+        "container_id": "tradingview-chart"
     });
-    res.end(getHTML());
+    
+    chartContainer.appendChild(script);
+}
+
+// Auto-slide reviews
+function autoSlideReviews() {
+    setInterval(() => {
+        moveSlider(1);
+    }, 5000);
+}
+
+// Smooth scrolling for navigation
+function setupSmoothScrolling() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    loadReviews();
+    loadFAQ();
+    loadTradingViewChart();
+    setupSmoothScrolling();
+    autoSlideReviews();
+    
+    console.log('AutoXau Pro website loaded successfully!');
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-    console.log('✅ AutoXAU Modern Design Server Running on port ' + PORT);
-    console.log('🎨 Light blue theme active');
-    console.log('📍 Visit: http://localhost:' + PORT);
-});
-
-server.on('error', (err) => {
-    console.error('Server error:', err);
+// Add some interactive effects
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('.header');
+    if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
 });
