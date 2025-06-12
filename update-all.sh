@@ -1,3 +1,58 @@
+#!/bin/bash
+
+# AutoXAU Complete Feature Update Script
+# This adds all requested features to your site
+
+echo "🚀 AutoXAU Complete Feature Update"
+echo "=================================="
+
+cd /var/www/autoxau
+
+# Step 1: First fix the domain issue
+echo "🔧 Step 1: Fixing domain configuration..."
+
+# Check if Nginx is installed
+if ! command -v nginx &> /dev/null; then
+    echo "Installing Nginx..."
+    sudo apt-get update
+    sudo apt-get install -y nginx
+fi
+
+# Create proper Nginx configuration
+sudo tee /etc/nginx/sites-available/autoxau > /dev/null << 'EOF'
+server {
+    listen 80;
+    server_name autoxau.com www.autoxau.com;
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+EOF
+
+# Enable the site
+sudo ln -sf /etc/nginx/sites-available/autoxau /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t && sudo systemctl reload nginx
+
+echo "✅ Nginx configured for autoxau.com"
+
+# Step 2: Create the complete site with all features
+echo -e "\n📝 Step 2: Creating complete site with all features..."
+
+# Backup current app.js
+cp app.js app.js.backup 2>/dev/null || true
+
+# Create new comprehensive app.js with all features
+cat > app.js << 'EOF'
 const http = require('http');
 const url = require('url');
 const PORT = 3000;
@@ -832,3 +887,58 @@ server.on('error', (err) => {
         process.exit(1);
     }
 });
+EOF
+
+# Step 3: Restart PM2 with new app.js
+echo -e "\n🚀 Step 3: Restarting server with all features..."
+pm2 stop autoxau
+pm2 delete autoxau
+pm2 start app.js --name autoxau
+pm2 save
+
+# Step 4: Test the site
+echo -e "\n🧪 Step 4: Testing site..."
+sleep 3
+if curl -s http://localhost:3000 | grep -q "AutoXAU Trading Bot"; then
+    echo "✅ Site is running with all features!"
+else
+    echo "⚠️  Site may still be starting up..."
+fi
+
+# Step 5: Setup SSL (optional)
+echo -e "\n🔒 Step 5: SSL Setup (optional)"
+echo "To enable HTTPS, run:"
+echo "sudo certbot --nginx -d autoxau.com -d www.autoxau.com"
+
+# Final status
+echo -e "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ AutoXAU Complete Update Finished!"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "🌐 Your site now has:"
+echo "✅ Navigation menu"
+echo "✅ Hero section with stats"
+echo "✅ Features section"
+echo "✅ Live TradingView chart"
+echo "✅ Customer reviews (6 testimonials)"
+echo "✅ Pricing plans ($39/$69/$99)"
+echo "✅ FAQ section (9 questions)"
+echo "✅ Responsive design"
+echo "✅ Smooth scrolling"
+echo "✅ Professional animations"
+echo ""
+echo "📍 Access your site:"
+echo "- Local: http://localhost:3000"
+echo "- Server IP: http://$(curl -s ifconfig.me 2>/dev/null):3000"
+echo "- Domain: http://autoxau.com"
+echo ""
+echo "📝 Next steps for payment integration:"
+echo "1. Sign up for Stripe account"
+echo "2. Get API keys"
+echo "3. Add payment processing endpoints"
+echo ""
+echo "🔧 Useful commands:"
+echo "- View logs: pm2 logs autoxau"
+echo "- Check status: pm2 status"
+echo "- Restart: pm2 restart autoxau"
+echo "- Edit site: nano app.js"
