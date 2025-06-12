@@ -1,13 +1,9 @@
 module.exports = {
   apps: [{
-    name: 'autoxau',
-    script: 'npm',
-    args: 'start',
-    cwd: '/var/www/autoxau',
-    instances: 1,
-    autorestart: true,
-    watch: false,
-    max_memory_restart: '500M',
+    name: 'autoxau-stripe',
+    script: 'server-stripe.js',
+    instances: 2,
+    exec_mode: 'cluster',
     env: {
       NODE_ENV: 'production',
       PORT: 3000
@@ -15,6 +11,7 @@ module.exports = {
     error_file: 'logs/err.log',
     out_file: 'logs/out.log',
     log_file: 'logs/combined.log',
-    time: true
+    time: true,
+    max_memory_restart: '500M'
   }]
 }
